@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitshark</title>
+    <style>
+        :root {
+            --color-black: rgba(0, 0, 0, 1);
+            --color-white: rgba(255, 255, 255, 1);
+            --color-dark-900: rgba(17, 17, 17, 1);
+            --color-gray-800: rgba(32, 32, 32, 1);
+            --color-gray-700: rgba(50, 50, 50, 1);
+            --color-gray-600: rgba(89, 89, 89, 1);
+            --color-gray-400: rgba(155, 155, 155, 1);
+            --color-gray-200: rgba(217, 217, 217, 1);
+            --color-accent: rgba(255, 255, 255, 1);
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: var(--space-16);
+            background: var(--color-dark-900);
+            color: var(--color-white);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: var(--space-12);
+            padding-bottom: var(--space-24);
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 600;
+            margin: 0 0 var(--space-8) 0;
+            color: var(--color-white);
+            letter-spacing: -0.5px;
+        }
+
+        .weight-tracker {
+            background: var(--color-gray-800);
+            border-radius: var(--radius-lg);
+            padding: var(--space-20);
+            margin-top: var(--space-24);
+            margin-bottom: var(--space-24);
+            border: 1px solid var(--color-gray-700);
+        }
+
+        .weight-tracker-label {
+            font-size: 12px;
+            color: var(--color-gray-400);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: var(--space-8);
+        }
+
+        .weight-tracker-input-group {
+            display: flex;
+            gap: var(--space-8);
+        }
+
+        .weight-tracker-input-group input {
+            flex: 1;
+            padding: var(--space-12);
+            background: var(--color-gray-700);
+            border: 1px solid var(--color-gray-600);
+            border-radius: var(--radius-base);
+            color: var(--color-white);
+            font-size: 14px;
+        }
+
+        .weight-tracker-input-group input::placeholder {
+            color: var(--color-gray-600);
+        }
+
+        .weight-tracker-input-group input:focus {
+            outline: none;
+            border-color: var(--color-white);
+            background: var(--color-gray-700);
+        }
+
+        .weight-tracker-input-group button {
+            padding: var(--space-12) var(--space-20);
+            background: var(--color-white);
+            color: var(--color-dark-900);
+            border: none;
+            border-radius: var(--radius-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .weight-tracker-input-group button:hover {
+            background: var(--color-gray-200);
+        }
+
+        .weight-display {
+            margin-top: var(--space-12);
+            font-size: 12px;
+            color: var(--color-gray-400);
+        }
+
+        .daily-summary {
+            background: var(--color-gray-800);
+            border-radius: var(--radius-lg);
+            padding: var(--space-32);
+            margin-bottom: var(--space-32);
+            border: 1px solid var(--color-gray-700);
+        }
+
+        .macro-card {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-20);
+            margin-top: var(--space-28);
+        }
+
+        .macro-item {
+            background: var(--color-gray-700);
+            padding: var(--space-16);
+            border-radius: var(--radius-base);
+            text-align: center;
+            border: 1px solid var(--color-gray-600);
+        }
+
+        .macro-label {
+            font-size: 12px;
+            color: var(--color-gray-400);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: var(--space-8);
+        }
+
+        .macro-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-white);
+            margin-bottom: var(--space-4);
+        }
+
+        .macro-unit {
+            font-size: 12px;
+            color: var(--color-gray-400);
+        }
+
+        .macro-progress {
+            width: 100%;
+            height: 6px;
+            background: var(--color-gray-600);
+            border-radius: 3px;
+            margin-top: var(--space-8);
+            overflow: hidden;
+        }
+
+        .macro-progress-bar {
+            height: 100%;
+            background: var(--color-white);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .calorie-summary {
+            margin-bottom: var(--space-32);
+            padding-bottom: var(--space-24);
+            border-bottom: 1px solid var(--color-gray-700);
+        }
+
+        .calorie-display {
+            text-align: center;
+        }
+
+        .calorie-main {
+            font-size: 56px;
+            font-weight: 700;
+            color: var(--color-white);
+            letter-spacing: -1px;
+        }
+
+        .calorie-target {
+            font-size: 13px;
+            color: var(--color-gray-400);
+            margin-top: var(--space-12);
+            font-weight: 500;
+        }
+
+        .add-meal-section {
+            background: var(--color-gray-800);
+            border-radius: var(--radius-lg);
+            padding: var(--space-28);
+            margin-bottom: var(--space-32);
+            border: 1px solid var(--color-gray-700);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-20);
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-slate-900);
+            margin-bottom: var(--space-8);
+            text-transform: uppercase;
+        }
+
+        input, select {
+            width: 100%;
+            padding: var(--space-12);
+            border: 1px solid var(--color-gray-600);
+            border-radius: var(--radius-base);
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            background: var(--color-gray-700);
+            color: var(--color-white);
+        }
+
+        input::placeholder, select {
+            color: var(--color-gray-600);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--color-white);
+            background: var(--color-gray-700);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-16);
+        }
+
+        .btn {
+            background: var(--color-white);
+            color: var(--color-dark-900);
+            padding: var(--space-12) var(--space-24);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--color-gray-200);
+        }
+
+        .meals-list {
+            background: var(--color-gray-800);
+            border-radius: var(--radius-lg);
+            padding: var(--space-28);
+            border: 1px solid var(--color-gray-700);
+            margin-bottom: var(--space-24);
+        }
+
+        .meals-list h2 {
+            font-size: 18px;
+            margin: 0 0 var(--space-20) 0;
+            color: var(--color-white);
+            font-weight: 600;
+        }
+
+        .meal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-12) var(--space-16);
+            border-bottom: 1px solid var(--color-gray-700);
+            transition: background 0.2s;
+        }
+
+        .meal-item:hover {
+            background: var(--color-gray-700);
+        }
+
+        .meal-item:last-child {
+            border-bottom: none;
+        }
+
+        .meal-info {
+            flex: 1;
+        }
+
+        .meal-name {
+            font-weight: 600;
+            color: var(--color-white);
+            margin-bottom: var(--space-4);
+        }
+
+        .meal-macros {
+            font-size: 12px;
+            color: var(--color-gray-400);
+        }
+
+        .meal-calories {
+            text-align: right;
+        }
+
+        .meal-cals {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-white);
+        }
+
+        .meal-delete {
+            background: var(--color-gray-600);
+            color: var(--color-white);
+            border: none;
+            padding: var(--space-8) var(--space-12);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: var(--space-12);
+            transition: background 0.2s;
+        }
+
+        .meal-delete:hover {
+            background: var(--color-gray-500);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-24);
+            color: var(--color-gray-400);
+        }
+
+        .food-database {
+            margin-top: var(--space-16);
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--color-gray-600);
+            border-radius: var(--radius-base);
+            background: var(--color-gray-700);
+        }
+
+        .food-item {
+            padding: var(--space-8) var(--space-12);
+            border-bottom: 1px solid var(--color-gray-600);
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 13px;
+            color: var(--color-white);
+        }
+
+        .food-item:hover {
+            background: var(--color-gray-600);
+        }
+
+        .food-item:last-child {
+            border-bottom: none;
+        }
+
+        .preset-btn {
+            background: var(--color-gray-700);
+            color: var(--color-white);
+            border: 1px solid var(--color-gray-600);
+            padding: var(--space-16) var(--space-12);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: var(--color-gray-600);
+            border-color: var(--color-white);
+        }
+
+        .preset-btn:active {
+            background: var(--color-gray-700);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: var(--color-gray-800);
+            margin: 5% auto;
+            padding: var(--space-24);
+            border: 1px solid var(--color-gray-700);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 400px;
+            color: var(--color-white);
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--space-16);
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--color-gray-400);
+        }
+
+        .modal-close:hover {
+            color: var(--color-white);
+        }
+
+        .meal-components {
+            margin-top: var(--space-16);
+            background: var(--color-gray-700);
+            border-radius: var(--radius-base);
+            padding: var(--space-12);
+            border: 1px solid var(--color-gray-600);
+        }
+
+        .component-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-8) 0;
+            font-size: 13px;
+            border-bottom: 1px solid var(--color-gray-600);
+        }
+
+        .component-item:last-child {
+            border-bottom: none;
+        }
+
+        .component-label {
+            color: var(--color-gray-400);
+        }
+
+        .component-value {
+            color: var(--color-white);
+            font-weight: 500;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background: var(--color-gray-800);
+            margin: 20% auto;
+            padding: var(--space-24);
+            border: 1px solid var(--color-gray-700);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 350px;
+            color: var(--color-white);
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--space-16);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: var(--space-12);
+            margin-top: var(--space-16);
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: var(--space-12) var(--space-16);
+            border: none;
+            border-radius: var(--radius-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+        }
+
+        .modal-btn-save {
+            background: var(--color-white);
+            color: var(--color-dark-900);
+        }
+
+        .modal-btn-save:hover {
+            background: var(--color-gray-200);
+        }
+
+        .modal-btn-cancel {
+            background: var(--color-gray-600);
+            color: var(--color-white);
+        }
+
+        .modal-btn-cancel:hover {
+            background: var(--color-gray-500);
+        }
+
+        @media (max-width: 768px) {
+
+        .component-value {
+            color: var(--color-white);
+            font-weight: 500;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background: var(--color-gray-800);
+            margin: 20% auto;
+            padding: var(--space-24);
+            border: 1px solid var(--color-gray-700);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 350px;
+            color: var(--color-white);
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--space-16);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: var(--space-12);
+            background: var(--color-gray-700);
+            border: 1px solid var(--color-gray-600);
+            border-radius: var(--radius-base);
+            color: var(--color-white);
+            font-size: 14px;
+            margin-bottom: var(--space-16);
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--color-white);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: var(--space-12);
+            margin-top: var(--space-16);
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: var(--space-12) var(--space-16);
+            border: none;
+            border-radius: var(--radius-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+        }
+
+        .modal-btn-save {
+            background: var(--color-white);
+            color: var(--color-dark-900);
+        }
+
+        .modal-btn-save:hover {
+            background: var(--color-gray-200);
+        }
+
+        .modal-btn-cancel {
+            background: var(--color-gray-600);
+            color: var(--color-white);
+        }
+
+        .modal-btn-cancel:hover {
+            background: var(--color-gray-500);
+        }
+
+        @media (max-width: 768px) {
+            .macro-card {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-12);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .calorie-main {
+                font-size: 40px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .daily-summary {
+                padding: var(--space-24);
+            }
+
+            .add-meal-section {
+                padding: var(--space-20);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Fitshark</h1>
+            <div style="display: flex; justify-content: center; gap: var(--space-16); align-items: center; margin-bottom: var(--space-12);">
+                <p style="color: var(--color-gray-400); margin: 0;">Daily goal: <span id="dailyGoalDisplay">2000</span> kcal</p>
+                <button onclick="showGoalModal()" style="background: none; border: none; color: var(--color-gray-400); cursor: pointer; font-size: 12px; text-decoration: underline;">Edit</button>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-16); margin: var(--space-20) 0; background: var(--color-gray-700); padding: var(--space-16) var(--space-20); border-radius: var(--radius-base); border: 1px solid var(--color-gray-600);">
+                <div style="text-align: center;">
+                    <div style="font-size: 11px; color: var(--color-gray-400); text-transform: uppercase; margin-bottom: var(--space-8);">Protein</div>
+                    <div style="font-size: 22px; font-weight: 600; color: var(--color-white);"><span id="proteinPercent">0</span>%</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 11px; color: var(--color-gray-400); text-transform: uppercase; margin-bottom: var(--space-8);">Carbs</div>
+                    <div style="font-size: 22px; font-weight: 600; color: var(--color-white);"><span id="carbsPercent">0</span>%</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 11px; color: var(--color-gray-400); text-transform: uppercase; margin-bottom: var(--space-8);">Fat</div>
+                    <div style="font-size: 22px; font-weight: 600; color: var(--color-white);"><span id="fatPercent">0</span>%</div>
+                </div>
+            </div>
+
+            <div class="weight-tracker">
+                <div class="weight-tracker-label">Daily Weight</div>
+                <div class="weight-tracker-input-group">
+                    <input type="number" id="weightInput" placeholder="Enter weight (kg)" step="0.1">
+                    <button onclick="logWeight()">Log</button>
+                </div>
+                <div class="weight-display" id="weightDisplay" style="display: none; margin-top: var(--space-8);">
+                    Latest: <span id="latestWeight"></span> kg
+                </div>
+            </div>
+        </div>
+
+        <div class="daily-summary">
+            <div class="calorie-summary">
+                <div class="calorie-display">
+                    <div class="calorie-main" id="totalCalories">0</div>
+                    <div class="calorie-target" id="calorie-target">of 2000 kcal consumed</div>
+                </div>
+            </div>
+
+            <div class="macro-card">
+                <div class="macro-item">
+                    <div class="macro-label">Protein</div>
+                    <div class="macro-value"><span id="proteinCals">0</span></div>
+                    <div class="macro-unit">/ 600 kcal (30%)</div>
+                    <div class="macro-progress">
+                        <div class="macro-progress-bar" id="proteinBar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="macro-item">
+                    <div class="macro-label">Carbs</div>
+                    <div class="macro-value"><span id="carbsCals">0</span></div>
+                    <div class="macro-unit">/ 800 kcal (40%)</div>
+                    <div class="macro-progress">
+                        <div class="macro-progress-bar" id="carbsBar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="macro-item">
+                    <div class="macro-label">Fat</div>
+                    <div class="macro-value"><span id="fatCals">0</span></div>
+                    <div class="macro-unit">/ 600 kcal (30%)</div>
+                    <div class="macro-progress">
+                        <div class="macro-progress-bar" id="fatBar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="macro-item">
+                    <div class="macro-label">Remaining</div>
+                    <div class="macro-value"><span id="remainingCals">2000</span></div>
+                    <div class="macro-unit">kcal left</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="add-meal-section">
+            <h2 style="font-size: 18px; margin: 0 0 var(--space-16) 0;">Preset Meals (Quick Log)</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-12); margin-bottom: var(--space-20);">
+                <button class="preset-btn" onclick="addPresetMeal('Lunch', 466, 41.0, 44.6, 12.3)">
+                    <div style="font-weight: 600;">Lunch</div>
+                    <div style="font-size: 12px; opacity: 0.8;">1:00–2:00 PM</div>
+                    <div style="font-size: 11px; margin-top: var(--space-4);">466 kcal</div>
+                </button>
+                <button class="preset-btn" onclick="addPresetMeal('Snack 1', 169, 2.0, 31.5, 5.0)">
+                    <div style="font-weight: 600;">Snack 1</div>
+                    <div style="font-size: 12px; opacity: 0.8;">4:00–4:30 PM</div>
+                    <div style="font-size: 11px; margin-top: var(--space-4);">169 kcal</div>
+                </button>
+                <button class="preset-btn" onclick="addPresetMeal('Pre-Workout', 384, 21.6, 51.6, 12.0)">
+                    <div style="font-weight: 600;">Pre-Workout</div>
+                    <div style="font-size: 12px; opacity: 0.8;">4:45–5:00 PM</div>
+                    <div style="font-size: 11px; margin-top: var(--space-4);">384 kcal</div>
+                </button>
+                <button class="preset-btn" onclick="addPresetMeal('Post-Workout', 136, 27.0, 4.7, 1.0)">
+                    <div style="font-weight: 600;">Post-Workout</div>
+                    <div style="font-size: 12px; opacity: 0.8;">6:00–6:15 PM</div>
+                    <div style="font-size: 11px; margin-top: var(--space-4);">136 kcal</div>
+                </button>
+                <button class="preset-btn" onclick="addPresetMeal('Dinner', 528, 60.0, 29.4, 20.0)">
+                    <div style="font-weight: 600;">Dinner</div>
+                    <div style="font-size: 12px; opacity: 0.8;">8:30–9:00 PM</div>
+                    <div style="font-size: 11px; margin-top: var(--space-4);">528 kcal</div>
+                </button>
+                <button class="preset-btn" onclick="addPresetMeal('Late Snack', 120, 6.2, 9.6, 6.2)">
+                    <div style="font-weight: 600;">Late Snack</div>
+                    <div style="font-size: 12px; opacity: 0.8;">10:30–11:00 PM</div>
+                    <div style="font-size: 11px; margin-top: var(--space-4);">120 kcal</div>
+                </button>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid rgba(0, 0, 0, 0.1); margin: var(--space-20) 0;">
+
+            <h2 style="font-size: 18px; margin: var(--space-20) 0 var(--space-16) 0;">Custom Meal</h2>
+
+            <div class="form-group">
+                <label for="mealFood">Food Item</label>
+                <input 
+                    type="text" 
+                    id="mealFood" 
+                    placeholder="e.g., Oats with milk, Paneer tikka..."
+                    autocomplete="off"
+                >
+                <div class="food-database" id="foodDatabase" style="display: none;"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="mealQuantity">Quantity (g)</label>
+                    <input type="number" id="mealQuantity" placeholder="100" value="100" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="mealCalories">Calories</label>
+                    <input type="number" id="mealCalories" placeholder="0" min="0">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="mealProtein">Protein (g)</label>
+                    <input type="number" id="mealProtein" placeholder="0" min="0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="mealCarbs">Carbs (g)</label>
+                    <input type="number" id="mealCarbs" placeholder="0" min="0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="mealFat">Fat (g)</label>
+                    <input type="number" id="mealFat" placeholder="0" min="0" step="0.1">
+                </div>
+            </div>
+
+            <button class="btn" onclick="addMeal()">Add Meal</button>
+        </div>
+
+        <div class="meals-list">
+            <h2>Today's Meals</h2>
+            <div id="mealsList">
+                <div class="empty-state">No meals added yet. Start by adding your first meal!</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="goalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Set Daily Calorie Goal</div>
+            <input type="number" id="goalInput" class="modal-input" placeholder="Enter calorie goal" min="1000" max="5000">
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-save" onclick="saveGoal()">Save</button>
+                <button class="modal-btn modal-btn-cancel" onclick="closeGoalModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DAILY_TARGET = 2000;
+        const PROTEIN_TARGET = 600;
+        const CARBS_TARGET = 800;
+        const FAT_TARGET = 600;
+
+        // Food database for quick selection
+        const foodDatabase = {
+            'Oats (MuscleBlaze Dark Chocolate)': { cals: 170, protein: 9, carbs: 28, fat: 3, serving: 70 },
+            'Paneer (Indian cottage cheese)': { cals: 220, protein: 25, carbs: 3, fat: 12, serving: 100 },
+            'Mother Dairy Toned Milk': { cals: 65, protein: 3.2, carbs: 4.8, fat: 3.4, serving: 100 },
+            'Chicken Breast': { cals: 165, protein: 31, carbs: 0, fat: 3.6, serving: 100 },
+            'Brown Rice': { cals: 112, protein: 2.6, carbs: 24, fat: 0.9, serving: 100 },
+            'Eggs': { cals: 155, protein: 13, carbs: 1.1, fat: 11, serving: 100 },
+            'Broccoli': { cals: 34, protein: 2.8, carbs: 7, fat: 0.4, serving: 100 },
+            'Almonds': { cals: 579, protein: 21, carbs: 22, fat: 50, serving: 100 },
+            'Sweet Potato': { cals: 86, protein: 1.6, carbs: 20, fat: 0.1, serving: 100 },
+            'Tuna (canned in water)': { cals: 99, protein: 23.5, carbs: 0, fat: 0.8, serving: 100 }
+        };
+
+        let meals = [];
+        let dailyGoal = 2000;
+
+        function showGoalModal() {
+            document.getElementById('goalModal').style.display = 'block';
+            document.getElementById('goalInput').value = dailyGoal;
+        }
+
+        function closeGoalModal() {
+            document.getElementById('goalModal').style.display = 'none';
+        }
+
+        function saveGoal() {
+            const newGoal = parseFloat(document.getElementById('goalInput').value);
+            if (!newGoal || newGoal <= 0) {
+                alert('Please enter a valid calorie goal');
+                return;
+            }
+            dailyGoal = newGoal;
+            document.getElementById('dailyGoalDisplay').textContent = dailyGoal;
+            document.getElementById('calorie-target').textContent = `of ${dailyGoal} kcal consumed`;
+            document.getElementById('remainingCals').textContent = dailyGoal;
+            closeGoalModal();
+            updateUI();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('goalModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function updateFoodDatabase() {
+            const input = document.getElementById('mealFood');
+            const dbDiv = document.getElementById('foodDatabase');
+            const value = input.value.toLowerCase();
+
+            if (value.length === 0) {
+                dbDiv.style.display = 'none';
+                return;
+            }
+
+            const matches = Object.keys(foodDatabase).filter(food =>
+                food.toLowerCase().includes(value)
+            );
+
+            if (matches.length === 0) {
+                dbDiv.style.display = 'none';
+                return;
+            }
+
+            dbDiv.style.display = 'block';
+            dbDiv.innerHTML = matches.map(food =>
+                `<div class="food-item" onclick="selectFood('${food}')">${food}</div>`
+            ).join('');
+        }
+
+        function selectFood(foodName) {
+            const food = foodDatabase[foodName];
+            document.getElementById('mealFood').value = foodName;
+            document.getElementById('mealQuantity').value = food.serving;
+            document.getElementById('mealCalories').value = food.cals;
+            document.getElementById('mealProtein').value = food.protein;
+            document.getElementById('mealCarbs').value = food.carbs;
+            document.getElementById('mealFat').value = food.fat;
+            document.getElementById('foodDatabase').style.display = 'none';
+        }
+
+        function addPresetMeal(mealName, calories, protein, carbs, fat) {
+            const meal = {
+                id: Date.now(),
+                food: mealName,
+                quantity: 1,
+                calories: Math.round(calories),
+                protein: parseFloat(protein),
+                carbs: parseFloat(carbs),
+                fat: parseFloat(fat),
+                proteinCals: parseFloat(protein) * 4,
+                carbsCals: parseFloat(carbs) * 4,
+                fatCals: parseFloat(fat) * 9
+            };
+
+            meals.push(meal);
+            updateUI();
+        }
+
+        function addMeal() {
+            const food = document.getElementById('mealFood').value.trim();
+            const quantity = parseFloat(document.getElementById('mealQuantity').value) || 0;
+            const calories = parseFloat(document.getElementById('mealCalories').value) || 0;
+            const protein = parseFloat(document.getElementById('mealProtein').value) || 0;
+            const carbs = parseFloat(document.getElementById('mealCarbs').value) || 0;
+            const fat = parseFloat(document.getElementById('mealFat').value) || 0;
+
+            if (!food || calories === 0) {
+                alert('Please select a food and enter calories');
+                return;
+            }
+
+            const meal = {
+                id: Date.now(),
+                food,
+                quantity,
+                calories,
+                protein,
+                carbs,
+                fat,
+                proteinCals: protein * 4,
+                carbsCals: carbs * 4,
+                fatCals: fat * 9
+            };
+
+            meals.push(meal);
+            updateUI();
+            clearForm();
+        }
+
+        let weightLog = [];
+
+        function logWeight() {
+            const weightInput = document.getElementById('weightInput');
+            const weight = parseFloat(weightInput.value);
+            
+            if (!weight || weight <= 0) {
+                alert('Please enter a valid weight');
+                return;
+            }
+
+            weightLog.push({
+                date: new Date().toLocaleDateString(),
+                weight: weight
+            });
+
+            document.getElementById('latestWeight').textContent = weight.toFixed(1);
+            document.getElementById('weightDisplay').style.display = 'block';
+            weightInput.value = '';
+        }
+
+        function deleteMeal(id) {
+            meals = meals.filter(m => m.id !== id);
+            updateUI();
+        }
+
+        function clearForm() {
+            document.getElementById('mealFood').value = '';
+            document.getElementById('mealQuantity').value = '100';
+            document.getElementById('mealCalories').value = '';
+            document.getElementById('mealProtein').value = '';
+            document.getElementById('mealCarbs').value = '';
+            document.getElementById('mealFat').value = '';
+            document.getElementById('foodDatabase').style.display = 'none';
+        }
+
+        function updateUI() {
+            const totalCalories = meals.reduce((sum, m) => sum + m.calories, 0);
+            const totalProteinCals = meals.reduce((sum, m) => sum + m.proteinCals, 0);
+            const totalCarbsCals = meals.reduce((sum, m) => sum + m.carbsCals, 0);
+            const totalFatCals = meals.reduce((sum, m) => sum + m.fatCals, 0);
+            const remaining = Math.max(0, DAILY_TARGET - totalCalories);
+
+            document.getElementById('totalCalories').textContent = totalCalories;
+            document.getElementById('proteinCals').textContent = totalProteinCals.toFixed(0);
+            document.getElementById('carbsCals').textContent = totalCarbsCals.toFixed(0);
+            document.getElementById('fatCals').textContent = totalFatCals.toFixed(0);
+            document.getElementById('remainingCals').textContent = remaining;
+
+            document.getElementById('proteinBar').style.width = Math.min(100, (totalProteinCals / PROTEIN_TARGET) * 100) + '%';
+            document.getElementById('carbsBar').style.width = Math.min(100, (totalCarbsCals / CARBS_TARGET) * 100) + '%';
+            document.getElementById('fatBar').style.width = Math.min(100, (totalFatCals / FAT_TARGET) * 100) + '%';
+
+            // Update macro percentages at top
+            const proteinPercent = totalCalories > 0 ? Math.round((totalProteinCals / totalCalories) * 100) : 0;
+            const carbsPercent = totalCalories > 0 ? Math.round((totalCarbsCals / totalCalories) * 100) : 0;
+            const fatPercent = totalCalories > 0 ? Math.round((totalFatCals / totalCalories) * 100) : 0;
+
+            document.getElementById('proteinPercent').textContent = proteinPercent;
+            document.getElementById('carbsPercent').textContent = carbsPercent;
+            document.getElementById('fatPercent').textContent = fatPercent;
+
+            const mealsList = document.getElementById('mealsList');
+            if (meals.length === 0) {
+                mealsList.innerHTML = '<div class="empty-state">No meals added yet. Start by adding your first meal!</div>';
+                return;
+            }
+
+            mealsList.innerHTML = meals.map(meal =>
+                `<div class="meal-item">
+                    <div class="meal-info">
+                        <div class="meal-name">${meal.food}</div>
+                        <div class="meal-macros">
+                            P: ${meal.protein.toFixed(1)}g | C: ${meal.carbs.toFixed(1)}g | F: ${meal.fat.toFixed(1)}g
+                        </div>
+                    </div>
+                    <div class="meal-calories">
+                        <div class="meal-cals">${meal.calories}</div>
+                        <div class="meal-macros">${meal.quantity}g</div>
+                    </div>
+                    <button class="meal-delete" onclick="deleteMeal(${meal.id})">Remove</button>
+                    <button class="meal-delete" onclick="editMeal(${meal.id})" style="background: var(--color-gray-400); margin-left: 4px;">Edit</button>
+                </div>`
+            ).join('');
+        }
+
+        function editMeal(id) {
+            const meal = meals.find(m => m.id === id);
+            if (!meal) return;
+
+            document.getElementById('mealFood').value = meal.food;
+            document.getElementById('mealQuantity').value = meal.quantity;
+            document.getElementById('mealCalories').value = meal.calories;
+            document.getElementById('mealProtein').value = meal.protein;
+            document.getElementById('mealCarbs').value = meal.carbs;
+            document.getElementById('mealFat').value = meal.fat;
+
+            deleteMeal(id);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('mealFood').addEventListener('input', updateFoodDatabase);
+        document.addEventListener('click', (e) => {
+            if (e.target.id !== 'mealFood') {
+                document.getElementById('foodDatabase').style.display = 'none';
+            }
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>
